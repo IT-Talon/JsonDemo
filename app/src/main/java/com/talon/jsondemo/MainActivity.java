@@ -4,6 +4,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.TextView;
 
+import okhttp3.OkHttpClient;
+import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -25,6 +27,7 @@ public class MainActivity extends AppCompatActivity {
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("http://118.178.224.151/")
                 .addConverterFactory(GsonConverterFactory.create())
+                .client(new OkHttpClient.Builder().addInterceptor(new HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY)).build())
                 .build();
 
         GitHubService service = retrofit.create(GitHubService.class);
@@ -45,7 +48,7 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    public interface GitHubService {
+    interface GitHubService {
         @GET("teammgmtback/app/params/findTeamParamList")
         Call<TeamListModel> getData();
     }
